@@ -14,6 +14,7 @@ bool Encrypt(FILE* input_file,FILE* output_file);
 bool Decrypt(FILE* input_file,FILE* output_file);
 
 static uint32_t hex_key;
+static uint32_t origine_key;
 
 int main(int argc, char ** argv)
 {
@@ -43,6 +44,7 @@ int main(int argc, char ** argv)
         }
 
         key = argv[2];
+        origine_key = (uint32_t)strtol(argv[2], NULL, 16);
         input_file = fopen(argv[3], "rb");
         output_file = fopen(argv[4], "w+b");
 
@@ -103,6 +105,7 @@ bool Encrypt(FILE* input_file,FILE* output_file)
     while(size = ReadBuffer(input_file,buffer))
     {
         (*(uint32_t*)buffer) ^= hex_key;
+        (*(uint32_t*)buffer) ^= origine_key;
         WriteBuffer(output_file,buffer,size);
     }
     return true;
@@ -116,6 +119,7 @@ bool Decrypt(FILE* input_file,FILE* output_file)
     while(size = ReadBuffer(input_file,buffer))
     {
         (*(uint32_t*)buffer) ^= hex_key;
+        (*(uint32_t*)buffer) ^= origine_key;
         WriteBuffer(output_file,buffer,size);
     }
     return true;
